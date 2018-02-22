@@ -18,3 +18,9 @@ endif
 	git push --tags
 	python setup.py sdist bdist_wheel upload
 	cd js_client && npm publish && cd ..
+
+test:
+	pytest
+	flake8
+	isort --check-only --diff --recursive channels tests
+	unify --check-only --recursive --quote \" channels tests

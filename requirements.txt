@@ -1,0 +1,10 @@
+pytest
+pytest-django
+pytest-asyncio
+flake8
+isort
+unify
+Django -e .[tests]
+asgiref
+daphne
+async_generator

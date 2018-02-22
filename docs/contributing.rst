@@ -56,6 +56,16 @@ one of them, pop into the IRC channel at ``#django-channels`` on Freenode or
 get in touch with Andrew directly at andrew@aeracode.org.
 
 
+Running tests
+-------------
+
+```
+$ pip install -e . # the dot specifies the current repo
+$ pip install -r requirements.txt
+$ make test
+```
+
+
 Can you pay me for my time?
 ---------------------------
 

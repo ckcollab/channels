@@ -12,7 +12,8 @@ env:
 
 install:
   - nvm install 7
-  - pip install -U pip wheel setuptools flake8 isort unify
+  - pip install -U pip wheel setuptools
+  - pip install -r requirements.txt
   - pip install $DJANGO -e .[tests]
   - pip freeze
 
