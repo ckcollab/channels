@@ -315,3 +315,44 @@ async def test_sessions():
     assert re.compile(r'Max-Age').search(value) is not None
 
     assert re.compile(r'Path').search(value) is not None
+
+
+@pytest.mark.asyncio
+async def test_file_uploading():
+    body = (
+        b"--BOUNDARY\r\n" +
+        b'Content-Disposition: form-data; name="title"\r\n\r\n' +
+        b"My First Book\r\n" +
+        b"--BOUNDARY\r\n" +
+        b'Content-Disposition: form-data; name="pdf"; filename="book.pdf"\r\n\r\n' +
+        b"FAKEPDFBYTESGOHERE" +
+        b"--BOUNDARY--"
+    )
+    headers = {
+        "content-type": b"multipart/form-data; boundary=BOUNDARY",
+        "content-length": str(len(body)).encode("ascii"),
+    }
+
+    class SimpleHttpApp(AsyncConsumer):
+        """
+        Barebones HTTP ASGI app for testing.
+        """
+
+        async def http_request(self, event):
+            # self.scope["session"].save()
+            assert self.scope["path"] == "/test_upload/"
+            assert self.scope["method"] == "POST"
+            await self.send({
+                "type": "http.response.start",
+                "status": 201,
+                "headers": [],
+            })
+            await self.send({
+                "type": "http.response.body",
+                "body": b'{"result": "great success!"}',
+            })
+
+    communicator = HttpCommunicator(SimpleHttpApp, "POST", "/test_upload/", body=body, headers=headers)
+    response = await communicator.get_response()
+    assert response["body"] == b'{"result": "great success!"}'
+    assert response["status"] == 201
