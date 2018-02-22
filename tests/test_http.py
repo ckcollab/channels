@@ -339,6 +339,7 @@ async def test_file_uploading():
         """
 
         async def http_request(self, event):
+            assert event['body'] == body
             assert self.scope["path"] == "/test_upload/"
             assert self.scope["method"] == "POST"
             await self.send({
